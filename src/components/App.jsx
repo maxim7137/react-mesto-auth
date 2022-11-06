@@ -30,10 +30,10 @@ function App() {
   useEffect(() => {
     api
       .getInitialUser()
-      .then(result => {
+      .then((result) => {
         setCurrentUser(result);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -70,10 +70,10 @@ function App() {
   useEffect(() => {
     api
       .getInitialCards()
-      .then(result => {
+      .then((result) => {
         setCards(result);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -81,27 +81,27 @@ function App() {
 
   // <--Лайки
   function handleLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
     if (isLiked) {
       api
         .dislikeCard(card._id)
-        .then(newCard => {
-          setCards(state =>
-            state.map(c => (c._id === newCard._id ? newCard : c))
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === newCard._id ? newCard : c))
           );
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else {
       api
         .likeCard(card._id)
-        .then(newCard => {
-          setCards(state =>
-            state.map(c => (c._id === newCard._id ? newCard : c))
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === newCard._id ? newCard : c))
           );
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
@@ -115,10 +115,12 @@ function App() {
     api
       .delCard(card._id)
       .then(
-        setCards(state => state.filter(stateCard => stateCard._id !== card._id))
+        setCards((state) =>
+          state.filter((stateCard) => stateCard._id !== card._id)
+        )
       )
       .then(closeAllPopups())
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -129,11 +131,11 @@ function App() {
   function handleUpdateUser(data) {
     api
       .setUser(data)
-      .then(result => {
+      .then((result) => {
         setCurrentUser(result);
         closeAllPopups();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -141,11 +143,11 @@ function App() {
   function handleUpdateAvatar(link) {
     api
       .setAvatar(link)
-      .then(result => {
+      .then((result) => {
         setCurrentUser(result);
         closeAllPopups();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -153,11 +155,11 @@ function App() {
   function handleAddPlaceSubmit(data) {
     api
       .setCard(data)
-      .then(newCard => {
+      .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -168,7 +170,10 @@ function App() {
         <div className="container">
           <Register />
           <Login />
-          <Header />
+          <Header>
+            <span className="header__email">email@mail.com</span>
+            <button className="header__button header__button_loggedIn">Выйти</button>
+          </Header>
           <Main
             onHandleCardClick={handleCardClick}
             onEditAvatar={handleEditAvatarClick}

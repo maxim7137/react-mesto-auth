@@ -1,13 +1,11 @@
-
 import logo from '../images/logo.svg';
 
-function Header() {
+function Header({children}) {
   return (
     <header className="header">
       <img src={logo} alt="Логотип Mesto Russia" className="header__logo" />
       <div className='header__user'>
-        <span className='header__email'>email@mail.com</span>
-        <button className='header__button'>Выйти</button>
+      {children}
       </div>
     </header>
   );

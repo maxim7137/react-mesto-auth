@@ -8,6 +8,14 @@
 @import url(./blocks/header/__user/header__user.css);
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__button/header__button.css);
+@import url(./blocks/header/__button/_loggedIn/header__button_loggedIn.css);
+
+@import url(./blocks/auth/auth.css);
+@import url(./blocks/auth/__form/auth__form.css);
+@import url(./blocks/auth/__heading/auth__heading.css);
+@import url(./blocks/auth/__field/auth__field.css);
+@import url(./blocks/auth/__input/auth__input.css);
+@import url(./blocks/auth/__button/auth__button.css);
 
 @import url(./blocks/main/main.css);
 

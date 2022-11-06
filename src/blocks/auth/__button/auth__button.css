@@ -1,0 +1,9 @@
+.auth__button {
+  width: 100%;
+  min-height: 50px;
+  margin: 200px 0 15px;
+  cursor: pointer;
+  border: none;
+  border-radius: 2px;
+  overflow: hidden;
+}
