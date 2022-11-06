@@ -13,6 +13,9 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 
+import Login from './Login';
+import Register from './Register';
+
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -163,6 +166,8 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="container">
+          <Register />
+          <Login />
           <Header />
           <Main
             onHandleCardClick={handleCardClick}
