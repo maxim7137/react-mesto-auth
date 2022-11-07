@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { register, authorize } from '../utils/Auth';
 
@@ -88,7 +88,12 @@ function AuthElement({ title, btnTitle, isRegister, handleLogin }) {
         </button>
       </form>
       {title === 'Регистрация' && (
-        <p className="auth__caption">Уже зарегистрированы? Войти</p>
+        <p className="auth__caption">
+          Уже зарегистрированы?{' '}
+          <Link to="/login" className="auth__link">
+            Войти
+          </Link>
+        </p>
       )}
     </div>
   );

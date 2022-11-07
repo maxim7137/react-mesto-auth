@@ -9,7 +9,7 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-// Импортируем объекты контекста
+import { getContent } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -28,6 +28,8 @@ import Login from './Login';
 import Register from './Register';
 
 function App() {
+  let AppHistory = useHistory();
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -37,6 +39,7 @@ function App() {
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('uEmail');
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
@@ -175,21 +178,45 @@ function App() {
         console.log(err);
       });
   }
-  // Обработчик входа
+  // Обработчики входа и выхода
   function handleLogin() {
     setLoggedIn(true);
   }
   function handleLogout() {
+    localStorage.removeItem('jwt');
     setLoggedIn(false);
   }
+  // Проверка токена
+  function tokenCheck() {
+    // если у пользователя есть токен в localStorage,
+    // эта функция проверит валидность токена
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      // проверим токен
+      getContent(jwt).then((res) => {
+        if (res) {
+          handleLogin(); // авторизуем пользователя
+          setUserEmail(res.email);
+          AppHistory.push('/');
+        }
+      });
+    }
+  }
+  useEffect(() => {
+    // настало время проверить токен
+    tokenCheck();
+  });
   // Защищенный компонент
-  function ProtectedComponent() {
+  function ProtectedComponent({ userEmail }) {
     return (
       <>
         <Header>
-          <span className="header__email">email@mail.com</span>
+          <span className="header__email">{userEmail}</span>
           <Link to="/register">
-            <button onClick={handleLogout} className="header__button header__button_loggedIn">
+            <button
+              onClick={handleLogout}
+              className="header__button header__button_loggedIn"
+            >
               Выйти
             </button>
           </Link>
@@ -206,10 +233,8 @@ function App() {
       </>
     );
   }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Router>
         <div className="page">
           <div className="container">
             <Switch>
@@ -220,9 +245,11 @@ function App() {
                 <Login handleLogin={handleLogin} />
               </Route>
               <ProtectedRoute
-                exact path="/"
+                exact
+                path="/"
                 loggedIn={loggedIn}
                 component={ProtectedComponent}
+                userEmail={userEmail}
               />
             </Switch>
             <EditProfilePopup
@@ -257,7 +284,6 @@ function App() {
             <Footer />
           </div>
         </div>
-      </Router>
     </CurrentUserContext.Provider>
   );
 }
