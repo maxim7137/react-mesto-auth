@@ -1,8 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 // Импортируем объекты контекста
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import ProtectedRoute from "./ProtectedRoute";
 
 import api from '../utils/Api';
 
@@ -27,6 +36,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
@@ -172,53 +182,62 @@ function App() {
         <div className="page">
           <div className="container">
             <Switch>
-              <Register />
-              <Login />
-              <Header>
-                <span className="header__email">email@mail.com</span>
-                <button className="header__button header__button_loggedIn">
-                  Выйти
-                </button>
-              </Header>
-              <Main
-                onHandleCardClick={handleCardClick}
-                onEditAvatar={handleEditAvatarClick}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                cards={cards}
-                onCardLike={handleLike}
-                onCardDelete={handleDeletePopupClick}
-              />
-              <EditProfilePopup
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-                onUpdateUser={handleUpdateUser}
-              />
-              <AddPlacePopup
-                isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}
-                onAddPlace={handleAddPlaceSubmit}
-              />
-              <EditAvatarPopup
-                isOpen={isEditAvatarPopupOpen}
-                onClose={closeAllPopups}
-                onUpdateAvatar={handleUpdateAvatar}
-              />
-              <PopupWithForm
-                isOpen={isDeletePopupOpen}
-                onClose={closeAllPopups}
-                onSubmit={handleSubmitDelete}
-                name="delete"
-                title="Вы уверены?"
-                buttonText="Да"
-              />
-              <ImagePopup
-                isOpen={isImagePopupOpen}
-                onClose={closeAllPopups}
-                card={selectedCard}
-              />
-              <Footer />
+              <Route path="/register">
+                <Register />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <ProtectedRoute exact path="/">
+                    <Header>
+                      <span className="header__email">email@mail.com</span>
+                      <Link to="/register">
+                        <button className="header__button header__button_loggedIn">
+                          Выйти
+                        </button>
+                      </Link>
+                    </Header>
+                    <Main
+                      onHandleCardClick={handleCardClick}
+                      onEditAvatar={handleEditAvatarClick}
+                      onEditProfile={handleEditProfileClick}
+                      onAddPlace={handleAddPlaceClick}
+                      cards={cards}
+                      onCardLike={handleLike}
+                      onCardDelete={handleDeletePopupClick}
+                    />
+              </ProtectedRoute>
             </Switch>
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+            />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleAddPlaceSubmit}
+            />
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
+            <PopupWithForm
+              isOpen={isDeletePopupOpen}
+              onClose={closeAllPopups}
+              onSubmit={handleSubmitDelete}
+              name="delete"
+              title="Вы уверены?"
+              buttonText="Да"
+            />
+            <ImagePopup
+              isOpen={isImagePopupOpen}
+              onClose={closeAllPopups}
+              card={selectedCard}
+            />
+
+            <Footer />
           </div>
         </div>
       </Router>

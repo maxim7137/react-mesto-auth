@@ -6,4 +6,9 @@
   font-size: 18px;
   line-height: 22px;
   padding: 0 0 0 24px;
+  transition: opacity 0.3s;
+}
+
+.header__button:hover {
+  opacity: 0.6;
 }

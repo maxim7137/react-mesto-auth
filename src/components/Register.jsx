@@ -1,16 +1,16 @@
+import { Link } from 'react-router-dom';
 import Header from './Header';
-import Auth from './Auth';
+import AuthElement from './AuthElement';
 
 function Register() {
   return (
     <>
       <Header>
-        <button className="header__button">Войти</button>
+        <Link to="/login">
+          <button className="header__button">Войти</button>
+        </Link>
       </Header>
-      <Auth
-        title={'Регистрация'}
-        btnTitle={'Зарегистрироваться'}
-      />
+      <AuthElement title={'Регистрация'} btnTitle={'Зарегистрироваться'} />
     </>
   );
 }
