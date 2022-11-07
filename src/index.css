@@ -16,6 +16,7 @@
 @import url(./blocks/auth/__field/auth__field.css);
 @import url(./blocks/auth/__input/auth__input.css);
 @import url(./blocks/auth/__button/auth__button.css);
+@import url(./blocks/auth/__caption/auth__caption.css);
 
 @import url(./blocks/main/main.css);
 

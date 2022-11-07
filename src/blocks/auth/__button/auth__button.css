@@ -2,8 +2,10 @@
   width: 100%;
   min-height: 50px;
   margin: 200px 0 15px;
+  padding: 0;
   cursor: pointer;
   border: none;
   border-radius: 2px;
   overflow: hidden;
+  background: #fff;
 }

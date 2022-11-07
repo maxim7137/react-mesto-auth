@@ -1,4 +1,6 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 // Импортируем объекты контекста
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -166,54 +168,60 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <div className="container">
-          <Register />
-          <Login />
-          <Header>
-            <span className="header__email">email@mail.com</span>
-            <button className="header__button header__button_loggedIn">Выйти</button>
-          </Header>
-          <Main
-            onHandleCardClick={handleCardClick}
-            onEditAvatar={handleEditAvatarClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            cards={cards}
-            onCardLike={handleLike}
-            onCardDelete={handleDeletePopupClick}
-          />
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-          />
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlaceSubmit}
-          />
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-          <PopupWithForm
-            isOpen={isDeletePopupOpen}
-            onClose={closeAllPopups}
-            onSubmit={handleSubmitDelete}
-            name="delete"
-            title="Вы уверены?"
-            buttonText="Да"
-          />
-          <ImagePopup
-            isOpen={isImagePopupOpen}
-            onClose={closeAllPopups}
-            card={selectedCard}
-          />
-          <Footer />
+      <Router>
+        <div className="page">
+          <div className="container">
+            <Switch>
+              <Register />
+              <Login />
+              <Header>
+                <span className="header__email">email@mail.com</span>
+                <button className="header__button header__button_loggedIn">
+                  Выйти
+                </button>
+              </Header>
+              <Main
+                onHandleCardClick={handleCardClick}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                cards={cards}
+                onCardLike={handleLike}
+                onCardDelete={handleDeletePopupClick}
+              />
+              <EditProfilePopup
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}
+              />
+              <AddPlacePopup
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                onAddPlace={handleAddPlaceSubmit}
+              />
+              <EditAvatarPopup
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+                onUpdateAvatar={handleUpdateAvatar}
+              />
+              <PopupWithForm
+                isOpen={isDeletePopupOpen}
+                onClose={closeAllPopups}
+                onSubmit={handleSubmitDelete}
+                name="delete"
+                title="Вы уверены?"
+                buttonText="Да"
+              />
+              <ImagePopup
+                isOpen={isImagePopupOpen}
+                onClose={closeAllPopups}
+                card={selectedCard}
+              />
+              <Footer />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     </CurrentUserContext.Provider>
   );
 }
