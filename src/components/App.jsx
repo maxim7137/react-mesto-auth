@@ -36,7 +36,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
@@ -179,9 +179,32 @@ function App() {
   function handleLogin() {
     setLoggedIn(true);
   }
+  function handleLogout() {
+    setLoggedIn(false);
+  }
   // Защищенный компонент
   function ProtectedComponent() {
-    
+    return (
+      <>
+        <Header>
+          <span className="header__email">email@mail.com</span>
+          <Link to="/register">
+            <button onClick={handleLogout} className="header__button header__button_loggedIn">
+              Выйти
+            </button>
+          </Link>
+        </Header>
+        <Main
+          onHandleCardClick={handleCardClick}
+          onEditAvatar={handleEditAvatarClick}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          cards={cards}
+          onCardLike={handleLike}
+          onCardDelete={handleDeletePopupClick}
+        />
+      </>
+    );
   }
 
   return (
@@ -196,25 +219,11 @@ function App() {
               <Route path="/login">
                 <Login handleLogin={handleLogin} />
               </Route>
-              <ProtectedRoute exact path="/">
-                <Header>
-                  <span className="header__email">email@mail.com</span>
-                  <Link to="/register">
-                    <button className="header__button header__button_loggedIn">
-                      Выйти
-                    </button>
-                  </Link>
-                </Header>
-                <Main
-                  onHandleCardClick={handleCardClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  cards={cards}
-                  onCardLike={handleLike}
-                  onCardDelete={handleDeletePopupClick}
-                />
-              </ProtectedRoute>
+              <ProtectedRoute
+                exact path="/"
+                loggedIn={loggedIn}
+                component={ProtectedComponent}
+              />
             </Switch>
             <EditProfilePopup
               isOpen={isEditProfilePopupOpen}
