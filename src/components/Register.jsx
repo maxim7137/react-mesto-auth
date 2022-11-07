@@ -10,7 +10,7 @@ function Register() {
           <button className="header__button">Войти</button>
         </Link>
       </Header>
-      <AuthElement title={'Регистрация'} btnTitle={'Зарегистрироваться'} />
+      <AuthElement title={'Регистрация'} btnTitle={'Зарегистрироваться'} isRegister={true} />
     </>
   );
 }

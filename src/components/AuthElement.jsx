@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { register } from '../utils/Auth';
+import { register, authorize } from '../utils/Auth';
 
-function AuthElement({ title, btnTitle }) {
+function AuthElement({ title, btnTitle, isRegister, handleLogin }) {
   let history = useHistory();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -19,19 +19,36 @@ function AuthElement({ title, btnTitle }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const username = email.split('@')[0];
-    register(username, password, email).then((res) => {
-      if (res.statusCode === 200) {
-        setMessage('Вы успешно зарегистрированы');
-        history.push('/login');
-        console.log(messageAuthElement);
-      } else {
-        let errorMessage = res.message[0].messages[0].message;
-        setMessage(`${errorMessage} Попробуйте еще раз.`);
-        console.log(messageAuthElement);
+    let username = email;
+    if (isRegister) {
+      register(username, password, email).then((res) => {
+        if (res) {
+          setMessage('Вы успешно зарегистрированы');
+          history.push('/login');
+          console.log(messageAuthElement);
+        } else {
+          setMessage('Что-то пошло не так! Попробуйте еще раз.');
+          console.log(messageAuthElement);
+        }
+      });
+    } else {
+      if (!email || !password) {
+        console.log('Не введен пароль или email');
+        return;
       }
-    });
+      authorize(username, password)
+        .then((data) => {
+          if (data.jwt) {
+            setPassword('');
+            setEmail('');
+            handleLogin();
+            history.push('/');
+          }
+        })
+        .catch((err) => console.log(err)); // запускается, если пользователь не найден
+    }
   }
+
   return (
     <div className="auth">
       <h2 className="auth__heading">{title}</h2>

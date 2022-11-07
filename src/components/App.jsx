@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom';
 // Импортируем объекты контекста
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from './ProtectedRoute';
 
 import api from '../utils/Api';
 
@@ -36,7 +36,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
@@ -175,6 +175,14 @@ function App() {
         console.log(err);
       });
   }
+  // Обработчик входа
+  function handleLogin() {
+    setLoggedIn(true);
+  }
+  // Защищенный компонент
+  function ProtectedComponent() {
+    
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -186,26 +194,26 @@ function App() {
                 <Register />
               </Route>
               <Route path="/login">
-                <Login />
+                <Login handleLogin={handleLogin} />
               </Route>
               <ProtectedRoute exact path="/">
-                    <Header>
-                      <span className="header__email">email@mail.com</span>
-                      <Link to="/register">
-                        <button className="header__button header__button_loggedIn">
-                          Выйти
-                        </button>
-                      </Link>
-                    </Header>
-                    <Main
-                      onHandleCardClick={handleCardClick}
-                      onEditAvatar={handleEditAvatarClick}
-                      onEditProfile={handleEditProfileClick}
-                      onAddPlace={handleAddPlaceClick}
-                      cards={cards}
-                      onCardLike={handleLike}
-                      onCardDelete={handleDeletePopupClick}
-                    />
+                <Header>
+                  <span className="header__email">email@mail.com</span>
+                  <Link to="/register">
+                    <button className="header__button header__button_loggedIn">
+                      Выйти
+                    </button>
+                  </Link>
+                </Header>
+                <Main
+                  onHandleCardClick={handleCardClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  cards={cards}
+                  onCardLike={handleLike}
+                  onCardDelete={handleDeletePopupClick}
+                />
               </ProtectedRoute>
             </Switch>
             <EditProfilePopup
