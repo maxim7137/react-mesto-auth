@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import AuthElement from './AuthElement';
 
-function Register() {
+function Register({handlePopupCheck}) {
   return (
     <>
       <Header>
@@ -10,7 +10,7 @@ function Register() {
           <button className="header__button">Войти</button>
         </Link>
       </Header>
-      <AuthElement title={'Регистрация'} btnTitle={'Зарегистрироваться'} isRegister={true} />
+      <AuthElement title={'Регистрация'} btnTitle={'Зарегистрироваться'} isRegister={true} handlePopupCheck={handlePopupCheck} />
     </>
   );
 }

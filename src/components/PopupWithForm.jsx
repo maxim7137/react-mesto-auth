@@ -7,7 +7,7 @@ function PopupWithForm({
   title,
   children,
   buttonText,
-  onSubmit
+  onSubmit,
 }) {
   return (
     <div className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}>
@@ -32,13 +32,15 @@ function PopupWithForm({
             onSubmit={onSubmit}
           >
             {children}
-            <button
-              type="submit"
-              className="popup__button"
-              aria-label={buttonText}
-            >
-              {buttonText}
-            </button>
+            {name !== 'InfoTool' && (
+              <button
+                type="submit"
+                className="popup__button"
+                aria-label={buttonText}
+              >
+                {buttonText}
+              </button>
+            )}
           </form>
         </div>
       </div>

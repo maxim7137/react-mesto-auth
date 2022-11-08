@@ -1,14 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation,
-} from 'react-router-dom';
+import { Switch, Route, Link, useHistory } from 'react-router-dom';
 import { getContent } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from './ProtectedRoute';
@@ -23,6 +15,7 @@ import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import InfoTooltip from './InfoTooltip';
 
 import Login from './Login';
 import Register from './Register';
@@ -35,6 +28,8 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+  const [isRegisterOk, setIsRegisterOk] = useState(null);
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
@@ -77,6 +72,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
     setIsDeletePopupOpen(false);
+    setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -186,6 +182,15 @@ function App() {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
   }
+  // Обработчик успешности регистрации
+  function handlePopupCheck(isOk) {
+    if (isOk) {
+      setIsRegisterOk(true);
+    } else {
+      setIsRegisterOk(false);
+    }
+    setIsInfoTooltipPopupOpen(true);
+  }
   // Проверка токена
   function tokenCheck() {
     // если у пользователя есть токен в localStorage,
@@ -235,55 +240,59 @@ function App() {
   }
   return (
     <CurrentUserContext.Provider value={currentUser}>
-        <div className="page">
-          <div className="container">
-            <Switch>
-              <Route path="/register">
-                <Register />
-              </Route>
-              <Route path="/login">
-                <Login handleLogin={handleLogin} />
-              </Route>
-              <ProtectedRoute
-                exact
-                path="/"
-                loggedIn={loggedIn}
-                component={ProtectedComponent}
-                userEmail={userEmail}
-              />
-            </Switch>
-            <EditProfilePopup
-              isOpen={isEditProfilePopupOpen}
-              onClose={closeAllPopups}
-              onUpdateUser={handleUpdateUser}
+      <div className="page">
+        <div className="container">
+          <Switch>
+            <Route path="/register">
+              <Register handlePopupCheck={handlePopupCheck} />
+            </Route>
+            <Route path="/login">
+              <Login handleLogin={handleLogin} />
+            </Route>
+            <ProtectedRoute
+              exact
+              path="/"
+              loggedIn={loggedIn}
+              component={ProtectedComponent}
+              userEmail={userEmail}
             />
-            <AddPlacePopup
-              isOpen={isAddPlacePopupOpen}
-              onClose={closeAllPopups}
-              onAddPlace={handleAddPlaceSubmit}
-            />
-            <EditAvatarPopup
-              isOpen={isEditAvatarPopupOpen}
-              onClose={closeAllPopups}
-              onUpdateAvatar={handleUpdateAvatar}
-            />
-            <PopupWithForm
-              isOpen={isDeletePopupOpen}
-              onClose={closeAllPopups}
-              onSubmit={handleSubmitDelete}
-              name="delete"
-              title="Вы уверены?"
-              buttonText="Да"
-            />
-            <ImagePopup
-              isOpen={isImagePopupOpen}
-              onClose={closeAllPopups}
-              card={selectedCard}
-            />
-
-            <Footer />
-          </div>
+          </Switch>
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit}
+          />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+          <PopupWithForm
+            isOpen={isDeletePopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={handleSubmitDelete}
+            name="delete"
+            title="Вы уверены?"
+            buttonText="Да"
+          />
+          <ImagePopup
+            isOpen={isImagePopupOpen}
+            onClose={closeAllPopups}
+            card={selectedCard}
+          />
+          <InfoTooltip
+            isOpen={isInfoTooltipPopupOpen}
+            onClose={closeAllPopups}
+            isRegisterOk={isRegisterOk}
+          />
+          <Footer />
         </div>
+      </div>
     </CurrentUserContext.Provider>
   );
 }
