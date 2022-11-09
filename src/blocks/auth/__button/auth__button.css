@@ -9,3 +9,9 @@
   overflow: hidden;
   background: #fff;
 }
+
+@media (max-width: 425px) {
+  .auth__button {
+    margin-top: 170px;
+  }
+}

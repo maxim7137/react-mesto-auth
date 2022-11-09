@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { register, authorize } from '../utils/Auth';
 
-function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupCheck }) {
+function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupCheck, setUserEmail }) {
   let history = useHistory();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -39,6 +39,7 @@ function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupChec
             setPassword('');
             setEmail('');
             handleLogin();
+            setUserEmail(username);
             history.push('/');
           }
         })

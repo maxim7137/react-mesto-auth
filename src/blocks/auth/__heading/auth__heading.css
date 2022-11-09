@@ -3,3 +3,9 @@
   line-height: 29px;
   margin: 0 0 45px 0;
 }
+
+@media (max-width: 425px) {
+  .auth__heading {
+    margin-bottom: 35px;
+  }
+}

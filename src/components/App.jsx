@@ -231,10 +231,14 @@ function App() {
               <MemoizedRegister handlePopupCheck={handlePopupCheck} />
             </Route>
             <Route path="/login">
-              <MemoizedLogin handleLogin={handleLogin} />
+              <MemoizedLogin
+                handleLogin={handleLogin}
+                setUserEmail={setUserEmail}
+              />
             </Route>
             <ProtectedRoute
-              exact path="/"
+              exact
+              path="/"
               loggedIn={loggedIn}
               component={MemoizedProtectedComponent}
               userEmail={userEmail}
