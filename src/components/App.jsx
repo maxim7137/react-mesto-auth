@@ -205,7 +205,7 @@ function App() {
   useEffect(() => {
     // настало время проверить токен
     tokenCheck();
-  });
+  }, []);
   // Защищенный компонент
   function ProtectedComponent({ userEmail }) {
     return (
