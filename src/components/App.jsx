@@ -1,25 +1,27 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Switch, Route, Link, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import { getContent } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import ProtectedRoute from './ProtectedRoute';
 
 import api from '../utils/Api';
 
-import Header from './Header';
-import Main from './Main';
+import ProtectedRoute from './ProtectedRoute';
+import ProtectedComponent from './ProtectedComponent';
+import Login from './Login';
+import Register from './Register';
+
 import Footer from './Footer';
+
 import ImagePopup from './ImagePopup';
 import PopupWithForm from './PopupWithForm';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
-import Login from './Login';
-import Register from './Register';
 
 // Мемоизированные компоненты
+const MemoizedProtectedComponent = React.memo(ProtectedComponent);
 const MemoizedInfoTooltip = React.memo(InfoTooltip);
 const MemoizedLogin = React.memo(Login);
 const MemoizedRegister = React.memo(Register);
@@ -220,36 +222,6 @@ function App() {
     tokenCheck();
   }, []);
 
-  // Защищенный компонент
-  function ProtectedComponent({ userEmail }) {
-    return (
-      <>
-        <Header>
-          <span className="header__email">{userEmail}</span>
-          <Link to="/register">
-            <button
-              onClick={handleLogout}
-              className="header__button header__button_loggedIn"
-            >
-              Выйти
-            </button>
-          </Link>
-        </Header>
-        <Main
-          onHandleCardClick={handleCardClick}
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          cards={cards}
-          onCardLike={handleLike}
-          onCardDelete={handleDeletePopupClick}
-        />
-      </>
-    );
-  }
-  // Мемоизированный компонент
-  const MemoizedProtectedComponent = React.memo(ProtectedComponent);
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -262,11 +234,18 @@ function App() {
               <MemoizedLogin handleLogin={handleLogin} />
             </Route>
             <ProtectedRoute
-              exact
-              path="/"
+              exact path="/"
               loggedIn={loggedIn}
               component={MemoizedProtectedComponent}
               userEmail={userEmail}
+              handleLogout={handleLogout}
+              handleCardClick={handleCardClick}
+              handleEditAvatarClick={handleEditAvatarClick}
+              handleEditProfileClick={handleEditProfileClick}
+              handleAddPlaceClick={handleAddPlaceClick}
+              cards={cards}
+              handleLike={handleLike}
+              handleDeletePopupClick={handleDeletePopupClick}
             />
           </Switch>
           <EditProfilePopup
