@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Switch, Route, Link, useHistory } from 'react-router-dom';
 import { getContent } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -16,9 +16,13 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
-
 import Login from './Login';
 import Register from './Register';
+
+// Мемоизированные компоненты
+const MemoizedInfoTooltip = React.memo(InfoTooltip);
+const MemoizedLogin = React.memo(Login);
+const MemoizedRegister = React.memo(Register);
 
 function App() {
   let AppHistory = useHistory();
@@ -34,7 +38,8 @@ function App() {
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState('uEmail');
+  const [userEmail, setUserEmail] = useState(null);
+
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
   useEffect(() => {
@@ -174,23 +179,26 @@ function App() {
         console.log(err);
       });
   }
+
   // Обработчики входа и выхода
-  function handleLogin() {
+  const handleLogin = useCallback(() => {
     setLoggedIn(true);
-  }
-  function handleLogout() {
+  }, []);
+  const handleLogout = useCallback(() => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
-  }
+  }, []);
+
   // Обработчик успешности регистрации
-  function handlePopupCheck(isOk) {
+  const handlePopupCheck = useCallback((isOk) => {
     if (isOk) {
       setIsRegisterOk(true);
     } else {
       setIsRegisterOk(false);
     }
     setIsInfoTooltipPopupOpen(true);
-  }
+  }, []);
+
   // Проверка токена
   function tokenCheck() {
     // если у пользователя есть токен в localStorage,
@@ -211,6 +219,7 @@ function App() {
     // настало время проверить токен
     tokenCheck();
   }, []);
+
   // Защищенный компонент
   function ProtectedComponent({ userEmail }) {
     return (
@@ -238,22 +247,25 @@ function App() {
       </>
     );
   }
+  // Мемоизированный компонент
+  const MemoizedProtectedComponent = React.memo(ProtectedComponent);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="container">
           <Switch>
             <Route path="/register">
-              <Register handlePopupCheck={handlePopupCheck} />
+              <MemoizedRegister handlePopupCheck={handlePopupCheck} />
             </Route>
             <Route path="/login">
-              <Login handleLogin={handleLogin} />
+              <MemoizedLogin handleLogin={handleLogin} />
             </Route>
             <ProtectedRoute
               exact
               path="/"
               loggedIn={loggedIn}
-              component={ProtectedComponent}
+              component={MemoizedProtectedComponent}
               userEmail={userEmail}
             />
           </Switch>
@@ -285,7 +297,7 @@ function App() {
             onClose={closeAllPopups}
             card={selectedCard}
           />
-          <InfoTooltip
+          <MemoizedInfoTooltip
             isOpen={isInfoTooltipPopupOpen}
             onClose={closeAllPopups}
             isRegisterOk={isRegisterOk}
