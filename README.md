@@ -12,4 +12,6 @@
 
 ### gh-pages
 
-[Mesto](https://maxim7137.github.io/mesto-react-auth/)
+пока без gh-pages
+
+[Mesto](https://maxim7137.github.io/react-mesto-auth/)

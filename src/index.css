@@ -62,6 +62,9 @@
 @import url(./blocks/popup/__caption/popup__caption.css);
 @import url(./blocks/popup/__error/popup__error.css);
 @import url(./blocks/popup/__error/_visible/popup__error_visible.css);
+@import url(./blocks/popup/__check-image/popup__check-image.css);
+@import url(./blocks/popup/__check-text/popup__check-text.css);
+@import url(./blocks/popup/__form/_InfoTool/popup__form_InfoTool.css);
 
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__text/footer__text.css);

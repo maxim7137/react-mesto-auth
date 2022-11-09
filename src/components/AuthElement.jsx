@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { register, authorize } from '../utils/Auth';
 
-function AuthElement({ title, btnTitle, isRegister, handleLogin }) {
+function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupCheck }) {
   let history = useHistory();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [messageAuthElement, setMessage] = useState('');
   function handleChange(e) {
     if (e.target.name === 'password') {
       setPassword(e.target.value);
@@ -23,12 +22,10 @@ function AuthElement({ title, btnTitle, isRegister, handleLogin }) {
     if (isRegister) {
       register(username, password, email).then((res) => {
         if (res) {
-          setMessage('Вы успешно зарегистрированы');
           history.push('/login');
-          console.log(messageAuthElement);
+          handlePopupCheck(true);
         } else {
-          setMessage('Что-то пошло не так! Попробуйте еще раз.');
-          console.log(messageAuthElement);
+          handlePopupCheck(false);
         }
       });
     } else {
