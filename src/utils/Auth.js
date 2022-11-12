@@ -25,7 +25,7 @@ export const authorize = (identifier, password) => {
   }).then(checkAuthResponse);
 };
 
-export const getContent = (token) => {
+export const getToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {

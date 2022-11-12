@@ -1,7 +1,6 @@
-import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
-import { getContent } from '../utils/Auth';
+import { useState, useEffect, useCallback, memo } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { register, authorize, getToken } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 import api from '../utils/Api';
@@ -12,6 +11,7 @@ import Login from './Login';
 import Register from './Register';
 
 import Footer from './Footer';
+import Loading from './Loading';
 
 import ImagePopup from './ImagePopup';
 import PopupWithForm from './PopupWithForm';
@@ -21,14 +21,12 @@ import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
 
 // Мемоизированные компоненты
-const MemoizedProtectedComponent = React.memo(ProtectedComponent);
-const MemoizedInfoTooltip = React.memo(InfoTooltip);
-const MemoizedLogin = React.memo(Login);
-const MemoizedRegister = React.memo(Register);
+const MemoizedProtectedComponent = memo(ProtectedComponent);
+const MemoizedInfoTooltip = memo(InfoTooltip);
+const MemoizedLogin = memo(Login);
+const MemoizedRegister = memo(Register);
 
 function App() {
-  let AppHistory = useHistory();
-
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -43,6 +41,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
+  const [userAuthData, setUserAuthData] = useState(null);
 
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
@@ -184,16 +183,36 @@ function App() {
       });
   }
 
-  // Обработчики входа и выхода
-  const handleLogin = useCallback(() => {
-    setLoggedIn(true);
+  // <-- Обработчики входа и выхода
+  const handleLogin = useCallback(async (username, password) => {
+    try {
+      setLoading(true);
+      const data = await authorize(username, password);
+      if (!data) {
+        throw new Error('Неверное имя или пароль');
+      }
+      if (data.jwt) {
+        localStorage.setItem('jwt', data.jwt);
+        setLoggedIn(true);
+        setUserAuthData(data.user);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
   const handleLogout = useCallback(() => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
   }, []);
+  // Обработчики входа и выхода -->
 
-  // Обработчик успешности регистрации
+  // <-- Обработчик регистрации
+  const handleRegister = useCallback(() => {}, []);
+  // Обработчик регистрации -->
+
+  // <-- Обработчик успешности регистрации
   const handlePopupCheck = useCallback((isOk) => {
     if (isOk) {
       setIsRegisterOk(true);
@@ -202,91 +221,112 @@ function App() {
     }
     setIsInfoTooltipPopupOpen(true);
   }, []);
+  // Обработчик успешности регистрации -->
+  // <-- Обработчик неуспешности входа
+  // Обработчик неуспешности входа -->
 
   // Проверка токена
-  function tokenCheck() {
+  const tokenCheck = useCallback(async () => {
     // если у пользователя есть токен в localStorage,
     // эта функция проверит валидность токена
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      // проверим токен
-      getContent(jwt).then((res) => {
-        if (res) {
-          handleLogin(); // авторизуем пользователя
-          setUserEmail(res.email);
-          AppHistory.push('/');
+    try {
+      setLoading(true);
+      const jwt = localStorage.getItem('jwt');
+      if (!jwt) {
+        throw new Error('no token');
+      }
+      if (jwt) {
+        const user = await getToken(jwt);
+        if (!user) {
+          throw new Error('no user');
         }
-      });
+        if (user) {
+          setUserAuthData(user);
+          setLoggedIn(true);
+        }
+      }
+    } catch (error) {
+      console.log('tokenCheck', error);
+    } finally {
+      setLoading(false);
     }
-  }
+  }, []);
+
   useEffect(() => {
     // настало время проверить токен
     tokenCheck();
-  }, []);
+  }, [tokenCheck]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="container">
-          <Switch>
-            <Route path="/register">
-              <MemoizedRegister handlePopupCheck={handlePopupCheck} />
-            </Route>
-            <Route path="/login">
-              <MemoizedLogin
-                handleLogin={handleLogin}
-                setUserEmail={setUserEmail}
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <Switch>
+                <Route path="/register">
+                  <MemoizedRegister handlePopupCheck={handlePopupCheck} />
+                </Route>
+                <Route path="/login">
+                  <MemoizedLogin
+                    handleLogin={handleLogin}
+                    setUserEmail={setUserEmail}
+                  />
+                </Route>
+                <ProtectedRoute
+                  exact
+                  path="/"
+                  loggedIn={loggedIn}
+                  component={MemoizedProtectedComponent}
+                  userEmail={userEmail}
+                  handleLogout={handleLogout}
+                  handleCardClick={handleCardClick}
+                  handleEditAvatarClick={handleEditAvatarClick}
+                  handleEditProfileClick={handleEditProfileClick}
+                  handleAddPlaceClick={handleAddPlaceClick}
+                  cards={cards}
+                  handleLike={handleLike}
+                  handleDeletePopupClick={handleDeletePopupClick}
+                />
+              </Switch>
+              <EditProfilePopup
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}
               />
-            </Route>
-            <ProtectedRoute
-              exact path="/"
-              loggedIn={loggedIn}
-              component={MemoizedProtectedComponent}
-              userEmail={userEmail}
-              handleLogout={handleLogout}
-              handleCardClick={handleCardClick}
-              handleEditAvatarClick={handleEditAvatarClick}
-              handleEditProfileClick={handleEditProfileClick}
-              handleAddPlaceClick={handleAddPlaceClick}
-              cards={cards}
-              handleLike={handleLike}
-              handleDeletePopupClick={handleDeletePopupClick}
-            />
-          </Switch>
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-          />
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlaceSubmit}
-          />
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-          <PopupWithForm
-            isOpen={isDeletePopupOpen}
-            onClose={closeAllPopups}
-            onSubmit={handleSubmitDelete}
-            name="delete"
-            title="Вы уверены?"
-            buttonText="Да"
-          />
-          <ImagePopup
-            isOpen={isImagePopupOpen}
-            onClose={closeAllPopups}
-            card={selectedCard}
-          />
-          <MemoizedInfoTooltip
-            isOpen={isInfoTooltipPopupOpen}
-            onClose={closeAllPopups}
-            isRegisterOk={isRegisterOk}
-          />
-          <Footer />
+              <AddPlacePopup
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                onAddPlace={handleAddPlaceSubmit}
+              />
+              <EditAvatarPopup
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+                onUpdateAvatar={handleUpdateAvatar}
+              />
+              <PopupWithForm
+                isOpen={isDeletePopupOpen}
+                onClose={closeAllPopups}
+                onSubmit={handleSubmitDelete}
+                name="delete"
+                title="Вы уверены?"
+                buttonText="Да"
+              />
+              <ImagePopup
+                isOpen={isImagePopupOpen}
+                onClose={closeAllPopups}
+                card={selectedCard}
+              />
+              <MemoizedInfoTooltip
+                isOpen={isInfoTooltipPopupOpen}
+                onClose={closeAllPopups}
+                isRegisterOk={isRegisterOk}
+              />
+              <Footer />
+            </>
+          )}
         </div>
       </div>
     </CurrentUserContext.Provider>

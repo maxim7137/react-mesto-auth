@@ -3,7 +3,14 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { register, authorize } from '../utils/Auth';
 
-function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupCheck, setUserEmail }) {
+function AuthElement({
+  title,
+  btnTitle,
+  isRegister,
+  handleLogin,
+  handlePopupCheck,
+  setUserEmail,
+}) {
   let history = useHistory();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -33,17 +40,7 @@ function AuthElement({ title, btnTitle, isRegister, handleLogin, handlePopupChec
         console.log('Не введен пароль или email');
         return;
       }
-      authorize(username, password)
-        .then((data) => {
-          if (data.jwt) {
-            setPassword('');
-            setEmail('');
-            handleLogin();
-            setUserEmail(username);
-            history.push('/');
-          }
-        })
-        .catch((err) => console.log(err)); // запускается, если пользователь не найден
+      handleLogin(username, password);
     }
   }
 
