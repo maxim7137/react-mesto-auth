@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import AuthElement from './AuthElement';
 
-function Login({ handleLogin, setUserEmail }) {
+function Login({ handleLogin }) {
   return (
     <>
       <Header>

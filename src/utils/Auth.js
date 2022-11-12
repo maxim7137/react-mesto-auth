@@ -1,5 +1,5 @@
 const checkAuthResponse = (res) =>
-  res.ok ? res.json() : Promise.reject(res.statusText);
+  res.ok ? res.json() : Promise.reject(res.json());
 
 export const BASE_URL = 'https://api.nomoreparties.co';
 

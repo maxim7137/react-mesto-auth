@@ -33,14 +33,17 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
-  const [isRegisterOk, setIsRegisterOk] = useState(null);
+  const [isResponseOk, setIsResponseOk] = useState(null);
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userAuthData, setUserAuthData] = useState(null);
+  const [userAuthData, setUserAuthData] = useState({
+    password: '',
+    email: '',
+  });
 
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
@@ -182,6 +185,17 @@ function App() {
       });
   }
 
+  // <-- Обработчик успешности авторизации
+  const handlePopupCheck = useCallback((isOk) => {
+    if (isOk) {
+      setIsResponseOk(true);
+    } else {
+      setIsResponseOk(false);
+    }
+    setIsInfoTooltipPopupOpen(true);
+  }, []);
+  // Обработчик успешности авторизации -->
+
   // <-- Обработчики входа и выхода
   const handleLogin = useCallback(async (username, password) => {
     try {
@@ -196,6 +210,7 @@ function App() {
         setUserAuthData(data.user);
       }
     } catch (error) {
+      handlePopupCheck(false);
     } finally {
       setLoading(false);
     }
@@ -208,21 +223,26 @@ function App() {
   // Обработчики входа и выхода -->
 
   // <-- Обработчик регистрации
-  const handleRegister = useCallback(() => {}, []);
+  const handleRegister = useCallback(
+    async (username, password, email) => {
+      try {
+        setLoading(true);
+        const data = await register(username, password, email);
+        if (data.jwt) {
+          localStorage.setItem('jwt', data.jwt);
+          setLoggedIn(true);
+          setUserAuthData(data.user);
+          handlePopupCheck(true);
+        }
+      } catch (error) {
+        handlePopupCheck(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [handlePopupCheck]
+  );
   // Обработчик регистрации -->
-
-  // <-- Обработчик успешности регистрации
-  const handlePopupCheck = useCallback((isOk) => {
-    if (isOk) {
-      setIsRegisterOk(true);
-    } else {
-      setIsRegisterOk(false);
-    }
-    setIsInfoTooltipPopupOpen(true);
-  }, []);
-  // Обработчик успешности регистрации -->
-  // <-- Обработчик неуспешности входа
-  // Обработчик неуспешности входа -->
 
   // Проверка токена
   const tokenCheck = useCallback(async () => {
@@ -242,7 +262,6 @@ function App() {
         if (user) {
           setUserAuthData(user);
           setLoggedIn(true);
-          console.log(user);
         }
       }
     } catch (error) {
@@ -267,12 +286,10 @@ function App() {
             <>
               <Switch>
                 <Route path="/register">
-                  <MemoizedRegister handlePopupCheck={handlePopupCheck} />
+                  <MemoizedRegister handleRegister={handleRegister} />
                 </Route>
                 <Route path="/login">
-                  <MemoizedLogin
-                    handleLogin={handleLogin}
-                  />
+                  <MemoizedLogin handleLogin={handleLogin} />
                 </Route>
                 <ProtectedRoute
                   exact
@@ -321,7 +338,7 @@ function App() {
               <MemoizedInfoTooltip
                 isOpen={isInfoTooltipPopupOpen}
                 onClose={closeAllPopups}
-                isRegisterOk={isRegisterOk}
+                isResponseOk={isResponseOk}
               />
               <Footer />
             </>

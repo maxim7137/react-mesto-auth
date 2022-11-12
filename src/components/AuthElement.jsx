@@ -1,45 +1,37 @@
 import { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-
-import { register, authorize } from '../utils/Auth';
+import { Link } from 'react-router-dom';
 
 function AuthElement({
   title,
   btnTitle,
   isRegister,
   handleLogin,
-  handlePopupCheck,
+  handleRegister,
 }) {
-  let history = useHistory();
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [inputData, setInputData] = useState({
+    password: '',
+    email: '',
+  });
+  const [message, setMessage] = useState('');
+
   function handleChange(e) {
-    if (e.target.name === 'password') {
-      setPassword(e.target.value);
-    }
-    if (e.target.name === 'email') {
-      setEmail(e.target.value);
-    }
+    const { name, value } = e.target;
+    setInputData({
+      ...inputData,
+      [name]: value,
+    });
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    let username = email;
     if (isRegister) {
-      register(username, password, email).then((res) => {
-        if (res) {
-          history.push('/login');
-          handlePopupCheck(true);
-        } else {
-          handlePopupCheck(false);
-        }
-      });
+      handleRegister(inputData.email, inputData.password, inputData.email);
     } else {
-      if (!email || !password) {
+      if (!inputData.email || !inputData.password) {
         console.log('Не введен пароль или email');
         return;
       }
-      handleLogin(username, password);
+      handleLogin(inputData.email, inputData.password);
     }
   }
 
@@ -50,7 +42,7 @@ function AuthElement({
         <label className="auth__field">
           <input
             onChange={handleChange}
-            value={email || ''}
+            value={inputData.email || ''}
             required
             type="email"
             name="email"
@@ -65,7 +57,7 @@ function AuthElement({
         <label className="auth__field">
           <input
             onChange={handleChange}
-            value={password || ''}
+            value={inputData.password || ''}
             required
             type="password"
             name="password"
