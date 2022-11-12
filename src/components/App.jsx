@@ -39,7 +39,9 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
+
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
 
   // <-- Контекст текущего пользователя
@@ -237,8 +239,7 @@ function App() {
               />
             </Route>
             <ProtectedRoute
-              exact
-              path="/"
+              exact path="/"
               loggedIn={loggedIn}
               component={MemoizedProtectedComponent}
               userEmail={userEmail}
