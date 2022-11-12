@@ -15,7 +15,6 @@ function Login({ handleLogin, setUserEmail }) {
         btnTitle={'Войти'}
         isRegister={false}
         handleLogin={handleLogin}
-        setUserEmail={setUserEmail}
       />
     </>
   );

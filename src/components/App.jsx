@@ -40,7 +40,6 @@ function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState(null);
   const [userAuthData, setUserAuthData] = useState(null);
 
   // <-- Контекст текущего пользователя
@@ -243,6 +242,7 @@ function App() {
         if (user) {
           setUserAuthData(user);
           setLoggedIn(true);
+          console.log(user);
         }
       }
     } catch (error) {
@@ -272,7 +272,6 @@ function App() {
                 <Route path="/login">
                   <MemoizedLogin
                     handleLogin={handleLogin}
-                    setUserEmail={setUserEmail}
                   />
                 </Route>
                 <ProtectedRoute
@@ -280,7 +279,7 @@ function App() {
                   path="/"
                   loggedIn={loggedIn}
                   component={MemoizedProtectedComponent}
-                  userEmail={userEmail}
+                  userEmail={userAuthData.email}
                   handleLogout={handleLogout}
                   handleCardClick={handleCardClick}
                   handleEditAvatarClick={handleEditAvatarClick}

@@ -9,7 +9,6 @@ function AuthElement({
   isRegister,
   handleLogin,
   handlePopupCheck,
-  setUserEmail,
 }) {
   let history = useHistory();
   const [password, setPassword] = useState('');
