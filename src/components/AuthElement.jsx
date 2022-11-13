@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 function AuthElement({
   title,
@@ -7,6 +7,7 @@ function AuthElement({
   isRegister,
   handleLogin,
   handleRegister,
+  loggedIn,
 }) {
   const [inputData, setInputData] = useState({
     password: '',
@@ -27,12 +28,12 @@ function AuthElement({
     if (isRegister) {
       handleRegister(inputData.email, inputData.password, inputData.email);
     } else {
-      if (!inputData.email || !inputData.password) {
-        console.log('Не введен пароль или email');
-        return;
-      }
       handleLogin(inputData.email, inputData.password);
     }
+  }
+
+  if (loggedIn) {
+    return <>{loggedIn ? <Redirect to="/" /> : <Redirect to="/login" />}</>;
   }
 
   return (

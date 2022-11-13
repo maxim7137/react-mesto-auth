@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { register, authorize, getToken } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -184,6 +184,13 @@ function App() {
         console.log(err);
       });
   }
+  // <-- Обработчик аутентификации
+  const authentication = useCallback((data) => {
+    localStorage.setItem('jwt', data.jwt);
+    setLoggedIn(true);
+    setUserAuthData(data.user);
+  }, []);
+  // Обработчик аутентификации -->
 
   // <-- Обработчик успешности авторизации
   const handlePopupCheck = useCallback((isOk) => {
@@ -197,28 +204,30 @@ function App() {
   // Обработчик успешности авторизации -->
 
   // <-- Обработчики входа и выхода
-  const handleLogin = useCallback(async (username, password) => {
-    try {
-      setLoading(true);
-      const data = await authorize(username, password);
-      if (!data) {
-        throw new Error('Неверное имя или пароль');
+  const handleLogin = useCallback(
+    async (username, password) => {
+      try {
+        setLoading(true);
+        const data = await authorize(username, password);
+        if (data.jwt) {
+          authentication(data);
+        }
+      } catch (error) {
+        handlePopupCheck(false);
+      } finally {
+        setLoading(false);
       }
-      if (data.jwt) {
-        localStorage.setItem('jwt', data.jwt);
-        setLoggedIn(true);
-        setUserAuthData(data.user);
-      }
-    } catch (error) {
-      handlePopupCheck(false);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [authentication, handlePopupCheck]
+  );
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
+    setUserAuthData({
+      password: '',
+      email: '',
+    });
   }, []);
   // Обработчики входа и выхода -->
 
@@ -229,9 +238,7 @@ function App() {
         setLoading(true);
         const data = await register(username, password, email);
         if (data.jwt) {
-          localStorage.setItem('jwt', data.jwt);
-          setLoggedIn(true);
-          setUserAuthData(data.user);
+          authentication(data);
           handlePopupCheck(true);
         }
       } catch (error) {
@@ -240,7 +247,7 @@ function App() {
         setLoading(false);
       }
     },
-    [handlePopupCheck]
+    [authentication, handlePopupCheck]
   );
   // Обработчик регистрации -->
 
@@ -285,12 +292,6 @@ function App() {
           ) : (
             <>
               <Switch>
-                <Route path="/register">
-                  <MemoizedRegister handleRegister={handleRegister} />
-                </Route>
-                <Route path="/login">
-                  <MemoizedLogin handleLogin={handleLogin} />
-                </Route>
                 <ProtectedRoute
                   exact
                   path="/"
@@ -306,6 +307,21 @@ function App() {
                   handleLike={handleLike}
                   handleDeletePopupClick={handleDeletePopupClick}
                 />
+                <Route path="/login">
+                  <MemoizedLogin
+                    handleLogin={handleLogin}
+                    loggedIn={loggedIn}
+                  />
+                </Route>
+                <Route path="/register">
+                  <MemoizedRegister
+                    handleRegister={handleRegister}
+                    loggedIn={loggedIn}
+                  />
+                </Route>
+                <Route path="*">
+                  {loggedIn ? <Redirect to="/" /> : <Redirect to="/login" />}
+                </Route>
               </Switch>
               <EditProfilePopup
                 isOpen={isEditProfilePopupOpen}

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import AuthElement from './AuthElement';
 
-function Login({ handleLogin }) {
+function Login({ handleLogin, loggedIn }) {
   return (
     <>
       <Header>
@@ -15,6 +15,7 @@ function Login({ handleLogin }) {
         btnTitle={'Войти'}
         isRegister={false}
         handleLogin={handleLogin}
+        loggedIn={loggedIn}
       />
     </>
   );

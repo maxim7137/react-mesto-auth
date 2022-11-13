@@ -16,3 +16,10 @@
 .auth__input:focus-visible {
   outline: none;
 }
+.auth__input:autofill,
+.auth__input:-webkit-autofill,
+.auth__input:autofill-selected,
+.auth__input:-webkit-autofill-selected {
+  background: none !important;
+  color: #fff !important;
+}
