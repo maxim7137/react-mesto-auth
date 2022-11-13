@@ -52,9 +52,11 @@ function App() {
   // Контекст текущего пользователя -->
 
   function handleEditAvatarClick() {
+    changeSaveState(false);
     setIsEditAvatarPopupOpen(true);
   }
   function handleEditProfileClick() {
+    changeSaveState(false);
     setIsEditProfilePopupOpen(true);
   }
   function handleAddPlaceClick() {
@@ -346,6 +348,8 @@ function App() {
                 isOpen={isEditProfilePopupOpen}
                 onClose={closeAllPopups}
                 onUpdateUser={handleUpdateUser}
+                changeSaveState={changeSaveState}
+                saving={saving}
               />
               <AddPlacePopup
                 isOpen={isAddPlacePopupOpen}
@@ -358,6 +362,8 @@ function App() {
                 isOpen={isEditAvatarPopupOpen}
                 onClose={closeAllPopups}
                 onUpdateAvatar={handleUpdateAvatar}
+                changeSaveState={changeSaveState}
+                saving={saving}
               />
               <PopupWithForm
                 isOpen={isDeletePopupOpen}

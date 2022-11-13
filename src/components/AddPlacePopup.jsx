@@ -16,7 +16,7 @@ function AddPlacePopup({
       nameRef.current.value = '';
       linkRef.current.value = '';
     }
-  }, [changeSaveState, isOpen]);
+  }, [isOpen, saving, changeSaveState]);
 
   // Обработчик отправки формы
   function handleSubmit(e) {

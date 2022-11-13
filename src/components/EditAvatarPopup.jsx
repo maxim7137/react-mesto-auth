@@ -1,13 +1,19 @@
 import { useRef, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({
+  isOpen,
+  onClose,
+  onUpdateAvatar,
+  saving,
+  changeSaveState,
+}) {
   const avatarRef = useRef();
   useEffect(() => {
     if (isOpen) {
       avatarRef.current.value = '';
     }
-  }, [isOpen]);
+  }, [isOpen, saving, changeSaveState]);
 
   // Обработчик отправки формы
   function handleSubmit(e) {
@@ -15,6 +21,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
     e.preventDefault();
     // Передаём значения рефа
     onUpdateAvatar(avatarRef.current.value);
+    changeSaveState(true);
   }
 
   return (
@@ -24,7 +31,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       onClose={onClose}
       name="avatar"
       title="Обновить аватар"
-      buttonText="Сохранить"
+      buttonText={saving ? 'Сохранение...' : 'Сохранить'}
     >
       <label className="popup__field">
         <input
