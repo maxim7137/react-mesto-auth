@@ -47,16 +47,6 @@ function App() {
 
   // <-- Контекст текущего пользователя
   const [currentUser, setCurrentUser] = useState({});
-  useEffect(() => {
-    api
-      .getInitialUser()
-      .then((result) => {
-        setCurrentUser(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
   // Контекст текущего пользователя -->
 
   function handleEditAvatarClick() {
@@ -86,18 +76,35 @@ function App() {
     setSelectedCard({});
   }
 
+  // <-- Пользователь
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getInitialUser()
+        .then((result) => {
+          setCurrentUser(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
+  // Пользователь -->
+
   // <-- всё, что касается переменной cards --
   // <-- Карточки
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((result) => {
-        setCards(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (loggedIn) {
+      api
+        .getInitialCards()
+        .then((result) => {
+          setCards(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
   // Карточки -->
 
   // <--Лайки
@@ -178,7 +185,12 @@ function App() {
       .setCard(data)
       .then((newCard) => {
         setCards([newCard, ...cards]);
-        closeAllPopups();
+        return newCard;
+      })
+      .then((newCard) => {
+        if (newCard) {
+          closeAllPopups();
+        }
       })
       .catch((err) => {
         console.log(err);

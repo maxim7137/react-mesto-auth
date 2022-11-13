@@ -21,7 +21,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name: nameRef.current.value,
       link: linkRef.current.value,
     });
-    e.target.reset();
+    // e.target.reset();
   }
 
   return (
