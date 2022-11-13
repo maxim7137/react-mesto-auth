@@ -13,7 +13,6 @@ function AuthElement({
     password: '',
     email: '',
   });
-  const [message, setMessage] = useState('');
 
   function handleChange(e) {
     const { name, value } = e.target;
