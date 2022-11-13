@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation, Link } from 'react-router-dom';
 import { register, authorize, getToken } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -9,7 +9,7 @@ import ProtectedRoute from './ProtectedRoute';
 import ProtectedComponent from './ProtectedComponent';
 import Login from './Login';
 import Register from './Register';
-
+import Header from './Header';
 import Footer from './Footer';
 import Loading from './Loading';
 
@@ -27,6 +27,8 @@ const MemoizedLogin = memo(Login);
 const MemoizedRegister = memo(Register);
 
 function App() {
+  let location = useLocation();
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -303,6 +305,31 @@ function App() {
             <Loading />
           ) : (
             <>
+              <Header>
+                {location.pathname === '/' && (
+                  <span className="header__email">{userAuthData.email}</span>
+                )}
+                <Link
+                  to={
+                    (location.pathname === '/login' && '/register') ||
+                    (location.pathname === '/register' && '/login') ||
+                    (location.pathname === '/' && '/login')
+                  }
+                >
+                  <button
+                    className={
+                      location.pathname === '/'
+                        ? 'header__button header__button_loggedIn'
+                        : 'header__button'
+                    }
+                    onClick={location.pathname === '/' ? handleLogout : null}
+                  >
+                    {(location.pathname === '/login' && 'Регистрация') ||
+                      (location.pathname === '/register' && 'Войти') ||
+                      (location.pathname === '/' && 'Выйти')}
+                  </button>
+                </Link>
+              </Header>
               <Switch>
                 <ProtectedRoute
                   exact
