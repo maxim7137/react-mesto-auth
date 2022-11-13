@@ -38,6 +38,8 @@ function App() {
   const [candidateForRemove, setCandidateForRemove] = useState({});
   const [cards, setCards] = useState([]);
 
+  const [saving, setSaving] = useState(false);
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userAuthData, setUserAuthData] = useState({
@@ -56,6 +58,7 @@ function App() {
     setIsEditProfilePopupOpen(true);
   }
   function handleAddPlaceClick() {
+    changeSaveState(false);
     setIsAddPlacePopupOpen(true);
   }
   function handleCardClick(card) {
@@ -178,6 +181,10 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }
+  // Переключение состояния сохранения
+  function changeSaveState(state) {
+    setSaving(state);
   }
   // Обработчик отправки места
   function handleAddPlaceSubmit(data) {
@@ -344,6 +351,8 @@ function App() {
                 isOpen={isAddPlacePopupOpen}
                 onClose={closeAllPopups}
                 onAddPlace={handleAddPlaceSubmit}
+                changeSaveState={changeSaveState}
+                saving={saving}
               />
               <EditAvatarPopup
                 isOpen={isEditAvatarPopupOpen}

@@ -1,7 +1,13 @@
 import { useRef, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({
+  isOpen,
+  onClose,
+  onAddPlace,
+  saving,
+  changeSaveState,
+}) {
   const nameRef = useRef();
   const linkRef = useRef();
 
@@ -10,7 +16,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       nameRef.current.value = '';
       linkRef.current.value = '';
     }
-  }, [isOpen]);
+  }, [changeSaveState, isOpen]);
 
   // Обработчик отправки формы
   function handleSubmit(e) {
@@ -22,6 +28,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       link: linkRef.current.value,
     });
     // e.target.reset();
+    changeSaveState(true);
   }
 
   return (
@@ -31,7 +38,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       onClose={onClose}
       name="card"
       title="Новое место"
-      buttonText="Создать"
+      buttonText={saving ? 'Создание...' : 'Создать'}
     >
       <label className="popup__field">
         <input
