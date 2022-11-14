@@ -12,6 +12,6 @@
 
 ### gh-pages
 
-пока без gh-pages
+gh-pages реализовано с помощью нерекомендуемого [HashRouter](https://reactrouter.com/en/main/router-components/hash-router#hashrouter)
 
 [Mesto](https://maxim7137.github.io/react-mesto-auth/)
