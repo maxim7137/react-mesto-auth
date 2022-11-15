@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, memo, useRef } from 'react';
 import { Switch, Route, Redirect, useLocation, Link } from 'react-router-dom';
 import { register, authorize, getToken } from '../utils/Auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -77,6 +77,25 @@ function App() {
     setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
   }
+  // <-- Закрытие попапов
+  // По клику на оверлей
+  function closeByClick(event) {
+    if (event.target.classList.contains('popup')) {
+      closeAllPopups();
+    }
+  }
+  // <-- По Escape --
+  function closeByEscape(event) {
+    if (event.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+  // -- По Escape -->
+  // Закрытие попапов -->
 
   // <-- Пользователь
   useEffect(() => {
@@ -299,7 +318,7 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
+      <div className="page" ref={ref} tabIndex={-1} onKeyDown={closeByEscape}>
         <div className="container">
           {loading ? (
             <Loading />
@@ -366,21 +385,25 @@ function App() {
                 isOpen={isEditProfilePopupOpen}
                 onClose={closeAllPopups}
                 onUpdateUser={handleUpdateUser}
+                closeByClick={closeByClick}
               />
               <AddPlacePopup
                 isOpen={isAddPlacePopupOpen}
                 onClose={closeAllPopups}
                 onAddPlace={handleAddPlaceSubmit}
+                closeByClick={closeByClick}
               />
               <EditAvatarPopup
                 isOpen={isEditAvatarPopupOpen}
                 onClose={closeAllPopups}
                 onUpdateAvatar={handleUpdateAvatar}
+                closeByClick={closeByClick}
               />
               <PopupWithForm
                 isOpen={isDeletePopupOpen}
                 onClose={closeAllPopups}
                 onSubmit={handleSubmitDelete}
+                closeByClick={closeByClick}
                 name="delete"
                 title="Вы уверены?"
                 buttonText="Да"
@@ -389,11 +412,13 @@ function App() {
                 isOpen={isImagePopupOpen}
                 onClose={closeAllPopups}
                 card={selectedCard}
+                closeByClick={closeByClick}
               />
               <MemoizedInfoTooltip
                 isOpen={isInfoTooltipPopupOpen}
                 onClose={closeAllPopups}
                 isResponseOk={isResponseOk}
+                closeByClick={closeByClick}
               />
               <Footer />
             </>

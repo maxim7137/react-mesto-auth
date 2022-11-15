@@ -1,8 +1,8 @@
 import close from '../images/close.svg';
 
-function ImagePopup({ isOpen, onClose, card }) {
+function ImagePopup({ isOpen, onClose, card, closeByClick }) {
   return (
-    <div className={`popup popup_image ${isOpen ? 'popup_opened' : ''}`}>
+    <div className={`popup popup_image ${isOpen ? 'popup_opened' : ''}`} onClick={closeByClick}>
       <figure className="popup__container">
         <button
           onClick={onClose}

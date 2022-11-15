@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({ isOpen, onClose, onAddPlace, closeByClick }) {
   const nameRef = useRef();
   const linkRef = useRef();
 
@@ -29,6 +29,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       onSubmit={handleSubmit}
       isOpen={isOpen}
       onClose={onClose}
+      closeByClick={closeByClick}
       name="card"
       title="Новое место"
       buttonText="Создать"

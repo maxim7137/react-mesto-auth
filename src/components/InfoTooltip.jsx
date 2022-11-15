@@ -3,9 +3,14 @@ import PopupWithForm from './PopupWithForm';
 import uniongood from '../images/uniongood.png';
 import unionbad from '../images/unionbad.png';
 
-function InfoTooltip({ isOpen, onClose, isResponseOk }) {
+function InfoTooltip({ isOpen, onClose, isResponseOk, closeByClick }) {
   return (
-    <PopupWithForm isOpen={isOpen} onClose={onClose} name="InfoTool">
+    <PopupWithForm
+      isOpen={isOpen}
+      onClose={onClose}
+      name="InfoTool"
+      closeByClick={closeByClick}
+    >
       <>
         <img
           src={isResponseOk ? uniongood : unionbad}
