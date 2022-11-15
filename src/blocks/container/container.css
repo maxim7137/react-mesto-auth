@@ -1,7 +1,11 @@
 .container {
+  box-sizing: border-box;
   max-width: 918px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 45px 19px 60px;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 425px) {
