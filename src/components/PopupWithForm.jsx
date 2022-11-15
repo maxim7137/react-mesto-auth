@@ -8,9 +8,13 @@ function PopupWithForm({
   children,
   buttonText,
   onSubmit,
+  closeByClick,
 }) {
   return (
-    <div className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}>
+    <div
+      className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}
+      onClick={closeByClick}
+    >
       <div className="popup__container">
         <button
           className="popup__close-button cross"

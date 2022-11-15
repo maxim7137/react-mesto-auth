@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+function EditProfilePopup({ isOpen, onClose, onUpdateUser, closeByClick }) {
   const user = useContext(CurrentUserContext);
   // Стейты, в которых содержатся значения инпутов
   const [userName, setUserName] = useState(' ');
@@ -24,7 +24,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     // Передаём значения управляемых компонентов во внешний обработчик
     onUpdateUser({
       name: userName,
-      about: userDescription
+      about: userDescription,
     });
   }
 
@@ -40,6 +40,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       onSubmit={handleSubmit}
       isOpen={isOpen}
       onClose={onClose}
+      closeByClick={closeByClick}
       name="profile"
       title="Редактировать профиль"
       buttonText="Сохранить"
