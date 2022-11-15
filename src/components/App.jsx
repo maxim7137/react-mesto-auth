@@ -77,13 +77,25 @@ function App() {
     setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
   }
-
+  // <-- Закрытие попапов
+  // По клику на оверлей
   function closeByClick(event) {
-    let target = event.target;
-    if (target.classList.contains('popup')) {
+    if (event.target.classList.contains('popup')) {
       closeAllPopups();
     }
   }
+  // <-- По Escape --
+  function closeByEscape(event) {
+    if (event.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+  // -- По Escape -->
+  // Закрытие попапов -->
 
   // <-- Пользователь
   useEffect(() => {
@@ -306,7 +318,7 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
+      <div className="page" ref={ref} tabIndex={-1} onKeyDown={closeByEscape}>
         <div className="container">
           {loading ? (
             <Loading />
