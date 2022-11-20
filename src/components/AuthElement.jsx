@@ -9,10 +9,27 @@ function AuthElement({
   handleRegister,
   loggedIn,
 }) {
-  const [inputData, setInputData] = useState({
-    password: '',
-    email: '',
+  const [inputData, setInputData] = useState({ password: '', email: '' });
+
+  // Стейты для валидации
+  const [isInputValid, setIsInputValid] = useState({
+    password: true,
+    email: true,
   });
+  const [errorMessage, setErrorMessage] = useState({ password: '', email: '' });
+
+  // Обработчик изменения инпута для валидации
+  function handleInput(e) {
+    const { name, validity, validationMessage } = e.target;
+    setIsInputValid({
+      ...isInputValid,
+      [name]: validity.valid,
+    });
+    setErrorMessage({
+      ...errorMessage,
+      [name]: validationMessage,
+    });
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -43,6 +60,7 @@ function AuthElement({
           <input
             onChange={handleChange}
             value={inputData.email || ''}
+            onInput={handleInput}
             required
             type="email"
             name="email"
@@ -52,12 +70,13 @@ function AuthElement({
             minLength="2"
             maxLength="30"
           />
-          <span className="auth__error email-error"></span>
+          <span className="auth__error email-error">{errorMessage.email}</span>
         </label>
         <label className="auth__field">
           <input
             onChange={handleChange}
             value={inputData.password || ''}
+            onInput={handleInput}
             required
             type="password"
             name="password"
@@ -67,7 +86,9 @@ function AuthElement({
             minLength="6"
             maxLength="30"
           />
-          <span className="auth__error password-error"></span>
+          <span className="auth__error password-error">
+            {errorMessage.password}
+          </span>
         </label>
         <button type="submit" className="auth__button" aria-label={btnTitle}>
           {btnTitle}

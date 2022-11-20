@@ -404,6 +404,7 @@ function App() {
                 onClose={closeAllPopups}
                 onSubmit={handleSubmitDelete}
                 closeByClick={closeByClick}
+                isAllInputValid={true}
                 name="delete"
                 title="Вы уверены?"
                 buttonText="Да"
