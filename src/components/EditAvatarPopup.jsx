@@ -33,6 +33,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, closeByClick }) {
       isOpen={isOpen}
       onClose={onClose}
       closeByClick={closeByClick}
+      isAllInputValid={isInputValid}
       name="avatar"
       title="Обновить аватар"
       buttonText="Сохранить"
