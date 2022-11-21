@@ -65,10 +65,14 @@ function AuthElement({
             type="email"
             name="email"
             id="email"
-            className="auth__input"
             placeholder="Email"
             minLength="2"
             maxLength="30"
+            className={
+              isInputValid.email
+                ? 'auth__input'
+                : 'auth__input auth__input_error'
+            }
           />
           <span className="auth__error email-error">{errorMessage.email}</span>
         </label>
@@ -81,10 +85,14 @@ function AuthElement({
             type="password"
             name="password"
             id="password"
-            className="auth__input"
             placeholder="Пароль"
             minLength="6"
             maxLength="30"
+            className={
+              isInputValid.email
+                ? 'auth__input'
+                : 'auth__input auth__input_error'
+            }
           />
           <span className="auth__error password-error">
             {errorMessage.password}
