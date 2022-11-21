@@ -89,7 +89,7 @@ function AuthElement({
             minLength="6"
             maxLength="30"
             className={
-              isInputValid.email
+              isInputValid.password
                 ? 'auth__input'
                 : 'auth__input auth__input_error'
             }
