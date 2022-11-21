@@ -7,6 +7,29 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, closeByClick }) {
   // Стейты, в которых содержатся значения инпутов
   const [userName, setUserName] = useState(' ');
   const [userDescription, setUserDescription] = useState(' ');
+  // Стейты для валидации
+  const [isInputValid, setIsInputValid] = useState({ name: true, about: true });
+  const [errorMessage, setErrorMessage] = useState({ name: '', about: '' });
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsInputValid({ name: true, about: true });
+      setErrorMessage({ name: '', about: '' });
+    }
+  }, [isOpen]);
+
+  // Обработчик изменения инпута для валидации
+  function handleInput(e) {
+    const { name, validity, validationMessage } = e.target;
+    setIsInputValid({
+      ...isInputValid,
+      [name]: validity.valid,
+    });
+    setErrorMessage({
+      ...errorMessage,
+      [name]: validationMessage,
+    });
+  }
 
   // Обработчик изменения инпута обновляет стейт
   function handleChange(e) {
@@ -41,6 +64,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, closeByClick }) {
       isOpen={isOpen}
       onClose={onClose}
       closeByClick={closeByClick}
+      isAllInputValid={isInputValid.name && isInputValid.about}
       name="profile"
       title="Редактировать профиль"
       buttonText="Сохранить"
@@ -49,31 +73,57 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, closeByClick }) {
         <input
           value={userName}
           onChange={handleChange}
+          onInput={handleInput}
           required
           type="text"
           name="name"
           id="user-name-input"
-          className="popup__input popup__input_user_name"
           placeholder="Имя"
           minLength="2"
           maxLength="40"
+          className={
+            isInputValid.name
+              ? 'popup__input popup__input_user_name'
+              : 'popup__input popup__input_user_name popup__input_type_error'
+          }
         />
-        <span className="popup__error user-name-input-error"></span>
+        <span
+          className={
+            isInputValid.name
+              ? 'popup__error user-name-input-error'
+              : 'popup__error user-name-input-error popup__error_visible'
+          }
+        >
+          {errorMessage.name}
+        </span>
       </label>
       <label className="popup__field">
         <input
           value={userDescription}
           onChange={handleChange}
+          onInput={handleInput}
           required
           type="text"
           name="about"
           id="user-character-input"
-          className="popup__input popup__input_user_character"
           placeholder="Занятие"
           minLength="2"
           maxLength="200"
+          className={
+            isInputValid.about
+              ? 'popup__input popup__input_user_character'
+              : 'popup__input popup__input_user_character popup__input_type_error'
+          }
         />
-        <span className="popup__error user-character-input-error"></span>
+        <span
+          className={
+            isInputValid.about
+              ? 'popup__error user-character-input-error'
+              : 'popup__error user-character-input-error popup__error_visible'
+          }
+        >
+          {errorMessage.about}
+        </span>
       </label>
     </PopupWithForm>
   );

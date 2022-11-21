@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState } from 'react';
 import close from '../images/close.svg';
 
 function PopupWithForm({
@@ -9,6 +10,7 @@ function PopupWithForm({
   buttonText,
   onSubmit,
   closeByClick,
+  isAllInputValid,
 }) {
   return (
     <div
@@ -39,7 +41,11 @@ function PopupWithForm({
             {name !== 'InfoTool' && (
               <button
                 type="submit"
-                className="popup__button"
+                className={
+                  isAllInputValid
+                    ? 'popup__button'
+                    : 'popup__button popup__button_disabled'
+                }
                 aria-label={buttonText}
               >
                 {buttonText}
