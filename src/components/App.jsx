@@ -100,8 +100,9 @@ function App() {
   // <-- Пользователь
   useEffect(() => {
     if (loggedIn) {
+      const jwt = 'Bearer ' + localStorage.getItem('jwt');
       api
-        .getInitialUser()
+        .getInitialUser(jwt)
         .then((result) => {
           setCurrentUser(result);
         })
@@ -116,8 +117,9 @@ function App() {
   // <-- Карточки
   useEffect(() => {
     if (loggedIn) {
+      const jwt = 'Bearer ' + localStorage.getItem('jwt');
       api
-        .getInitialCards()
+        .getInitialCards(jwt)
         .then((result) => {
           setCards(result);
         })
@@ -131,9 +133,10 @@ function App() {
   // <--Лайки
   function handleLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const jwt = 'Bearer ' + localStorage.getItem('jwt');
     if (isLiked) {
       api
-        .dislikeCard(card._id)
+        .dislikeCard(card._id, jwt)
         .then((newCard) => {
           setCards((state) =>
             state.map((c) => (c._id === newCard._id ? newCard : c))
@@ -144,7 +147,7 @@ function App() {
         });
     } else {
       api
-        .likeCard(card._id)
+        .likeCard(card._id, jwt)
         .then((newCard) => {
           setCards((state) =>
             state.map((c) => (c._id === newCard._id ? newCard : c))
@@ -161,8 +164,9 @@ function App() {
   function handleSubmitDelete(e) {
     e.preventDefault();
     const card = candidateForRemove;
+    const jwt = 'Bearer ' + localStorage.getItem('jwt');
     api
-      .delCard(card._id)
+      .delCard(card._id, jwt)
       .then(
         setCards((state) =>
           state.filter((stateCard) => stateCard._id !== card._id)
@@ -178,8 +182,9 @@ function App() {
 
   // Обработчик отправки профиля
   function handleUpdateUser(data) {
+    const jwt = 'Bearer ' + localStorage.getItem('jwt');
     api
-      .setUser(data)
+      .setUser(data, jwt)
       .then((result) => {
         setCurrentUser(result);
         closeAllPopups();
@@ -190,8 +195,9 @@ function App() {
   }
   // Обработчик отправки аватара
   function handleUpdateAvatar(link) {
+    const jwt = 'Bearer ' + localStorage.getItem('jwt');
     api
-      .setAvatar(link)
+      .setAvatar(link, jwt)
       .then((result) => {
         setCurrentUser(result);
         closeAllPopups();
@@ -202,8 +208,9 @@ function App() {
   }
   // Обработчик отправки места
   function handleAddPlaceSubmit(data) {
+    const jwt = 'Bearer ' + localStorage.getItem('jwt');
     api
-      .setCard(data)
+      .setCard(data, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         return newCard;

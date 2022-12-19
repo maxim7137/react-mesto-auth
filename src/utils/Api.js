@@ -7,31 +7,35 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  constructor(token, baseUrl) {
-    this._token = token;
+  constructor(baseUrl) {
     this._baseUrl = baseUrl;
-    this._headers = {
-      authorization: this._token,
-      'Content-Type': 'application/json',
-    };
   }
 
-  getInitialUser() {
+  getInitialUser(token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
     }).then(this._isServerOk);
   }
 
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
     }).then(this._isServerOk);
   }
 
-  setUser({ name, about }) {
+  setUser({ name, about }, token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         name,
         about,
@@ -39,20 +43,26 @@ class Api {
     }).then(this._isServerOk);
   }
 
-  setAvatar(avatar) {
+  setAvatar(avatar, token) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         avatar: avatar,
       }),
     }).then(this._isServerOk);
   }
 
-  setCard({ name, link }) {
+  setCard({ name, link }, token) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         name,
         link,
@@ -60,29 +70,35 @@ class Api {
     }).then(this._isServerOk);
   }
 
-  delCard(_id) {
+  delCard(_id, token) {
     return fetch(`${this._baseUrl}/cards/${_id}`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
     }).then(this._isServerOk);
   }
 
-  likeCard(_id) {
+  likeCard(_id, token) {
     return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
       method: 'PUT',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
     }).then(this._isServerOk);
   }
 
-  dislikeCard(_id) {
+  dislikeCard(_id, token) {
     return fetch(`${this._baseUrl}/cards/${_id}/likes`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
     }).then(this._isServerOk);
   }
 }
-const api = new Api(
-  'eacdcad8-b7be-4b95-a68d-d5be8d193107',
-  'http://localhost:3001'
-);
+const api = new Api('http://localhost:3001');
 export default api;
