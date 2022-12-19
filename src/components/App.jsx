@@ -219,7 +219,7 @@ function App() {
   }
   // <-- Обработчик аутентификации
   const authentication = useCallback((data) => {
-    localStorage.setItem('jwt', data.jwt);
+    localStorage.setItem('jwt', data.token);
     setLoggedIn(true);
     setUserAuthData(data.user);
   }, []);
@@ -238,11 +238,11 @@ function App() {
 
   // <-- Обработчики входа и выхода
   const handleLogin = useCallback(
-    async (username, password) => {
+    async (email, password) => {
       try {
         setLoading(true);
-        const data = await authorize(username, password);
-        if (data.jwt) {
+        const data = await authorize(email, password);
+        if (data.token) {
           authentication(data);
         }
       } catch (error) {
@@ -266,11 +266,11 @@ function App() {
 
   // <-- Обработчик регистрации
   const handleRegister = useCallback(
-    async (username, password, email) => {
+    async (email, password) => {
       try {
         setLoading(true);
-        const data = await register(username, password, email);
-        if (data.jwt) {
+        const data = await register(email, password);
+        if (data.token) {
           authentication(data);
           handlePopupCheck(true);
         }
