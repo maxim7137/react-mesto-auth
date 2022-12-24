@@ -46,6 +46,7 @@ function AuthElement({
     } else {
       handleLogin(inputData.email, inputData.password);
     }
+    // return <>{loggedIn ? <Redirect to="/" /> : <Redirect to="/login" />}</>;
   }
 
   if (loggedIn) {

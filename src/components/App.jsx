@@ -252,6 +252,10 @@ function App() {
         if (data.token) {
           authentication(data);
         }
+        setUserAuthData({
+          password,
+          email,
+        });
       } catch (error) {
         handlePopupCheck(false);
       } finally {
