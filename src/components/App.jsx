@@ -21,7 +21,6 @@ import AddPlacePopup from './AddPlacePopup';
 import InfoTooltip from './InfoTooltip';
 
 // Мемоизированные компоненты
-const MemoizedProtectedComponent = memo(ProtectedComponent);
 const MemoizedInfoTooltip = memo(InfoTooltip);
 const MemoizedLogin = memo(Login);
 const MemoizedRegister = memo(Register);
@@ -365,7 +364,7 @@ function App() {
                   exact
                   path="/"
                   loggedIn={loggedIn}
-                  component={MemoizedProtectedComponent}
+                  component={ProtectedComponent}
                   userEmail={userAuthData.email}
                   handleLogout={handleLogout}
                   handleCardClick={handleCardClick}
