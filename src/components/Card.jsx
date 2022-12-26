@@ -18,7 +18,7 @@ function isLikedByMe(array, userId) {
 }
 // моя ли карточка
 function isMyCard(userId, owner) {
-  return userId === owner._id;
+  return userId === owner._id || userId === owner;
 }
 // заменить картинку если ошибка
 function errorHandler(event) {
