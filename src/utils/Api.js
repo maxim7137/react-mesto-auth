@@ -101,7 +101,7 @@ class Api {
   }
 }
 
-const serverUrl = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3000';
 
-const api = new Api(serverUrl);
+const api = new Api(BASE_URL);
 export default api;
