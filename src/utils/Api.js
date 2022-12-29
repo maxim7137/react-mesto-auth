@@ -101,7 +101,7 @@ class Api {
   }
 }
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://maxim.nomoredomains.club';
 
 const api = new Api(BASE_URL);
 export default api;

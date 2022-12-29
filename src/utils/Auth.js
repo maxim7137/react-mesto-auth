@@ -1,7 +1,7 @@
 const checkAuthResponse = (res) =>
   res.ok ? res.json() : Promise.reject(res.json());
 
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://maxim.nomoredomains.club';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
