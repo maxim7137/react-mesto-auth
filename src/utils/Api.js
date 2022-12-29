@@ -100,5 +100,8 @@ class Api {
     }).then(this._isServerOk);
   }
 }
-const api = new Api('http://localhost:3001');
+
+const serverUrl = 'http://localhost:3000';
+
+const api = new Api(serverUrl);
 export default api;
