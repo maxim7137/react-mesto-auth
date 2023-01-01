@@ -101,7 +101,7 @@ class Api {
   }
 }
 
-const BASE_URL = 'http://maxim.nomoredomains.club';
+const BASE_URL = 'https://api.maxim.nomoredomains.club';
 
 const api = new Api(BASE_URL);
 export default api;
